@@ -1,4 +1,4 @@
-<!-- Loading -->
+<!-- Loading State -->
 @if (loading()) {
   <div class="loading">
     <div class="spinner"></div>
@@ -6,8 +6,16 @@
   </div>
 }
 
-<!-- Forecast available -->
-@if (forecast().length > 0) {
+<!-- Error State -->
+@if (!loading() && error()) {
+  <div class="error">
+    <p>{{ error() }}</p>
+  </div>
+}
+
+<!-- Forecast Available -->
+@if (!loading() && !error() && forecast().length > 0) {
+
   <!-- Date Tabs -->
   <div class="tabs">
     @for (day of forecast(); track day.date) {
@@ -21,17 +29,19 @@
     }
   </div>
 
-  <!-- Forecast Cards for active date -->
+  <!-- Forecast Cards -->
   <div class="forecast-container">
     @for (day of forecast(); track day.date) {
       @if (day.date === activeDate()) {
         @for (forecast of day.forecasts; track forecast.time) {
           <div class="forecast-card">
             <p>⏰ {{ forecast.time }}</p>
+
             <img
               [src]="'https://openweathermap.org/img/wn/' + forecast.icon + '@2x.png'"
               [alt]="forecast.description"
             />
+
             <p>🌡 {{ forecast.temperature }} °C</p>
             <p>💨 {{ forecast.windSpeed }} m/s</p>
             <p>{{ forecast.description }}</p>
@@ -42,11 +52,11 @@
   </div>
 }
 
-<!-- No forecast -->
-@if (!loading() && forecast().length === 0) {
+<!-- No City Selected / Empty State -->
+@if (!loading() && !error() && forecast().length === 0) {
   <div class="no-forecast">
-    <p>No forecast available</p>
-    <p>Please choose a city to display forecast</p>
+    <div class="icon">☁️</div>
+    <h3>No forecast yet</h3>
+    <p>Please choose a city to see the 5-day weather forecast.</p>
   </div>
 }
-

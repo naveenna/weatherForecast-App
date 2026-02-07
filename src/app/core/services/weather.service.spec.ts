@@ -57,14 +57,14 @@ describe('WeatherService', () => {
 
     const mockResponse = {
       list: [
-        // Today - should be skipped
+        // Today
         { dt_txt: `${todayStr} 09:00:00`, main: { temp: 10 }, wind: { speed: 2 }, weather: [{ description: 'sunny', icon: '01d' }] },
 
-        // Tomorrow - multiple entries
+        // Tomorrow
         { dt_txt: `${tomorrowStr} 09:00:00`, main: { temp: 12 }, wind: { speed: 3 }, weather: [{ description: 'cloudy', icon: '02d' }] },
         { dt_txt: `${tomorrowStr} 12:00:00`, main: { temp: 14 }, wind: { speed: 4 }, weather: [{ description: 'rain', icon: '10d' }] },
 
-        // Day after tomorrow - single entry
+        // Day after tomorrow 
         { dt_txt: `${dayAfterStr} 09:00:00`, main: { temp: 15 }, wind: { speed: 5 }, weather: [{ description: 'fog', icon: '50d' }] },
       ]
     };

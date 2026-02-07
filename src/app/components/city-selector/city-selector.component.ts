@@ -10,6 +10,7 @@ import { clearForecast, selectCity } from '../../store/weather/weather.actions';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class CitySelectorComponent {
+    //User required data for cities
   cities = ['Birmingham', 'London', 'Cardiff'];
 
   constructor(private store: Store) {}

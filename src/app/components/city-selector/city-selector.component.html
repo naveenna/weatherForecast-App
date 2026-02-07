@@ -1,9 +1,18 @@
 <div class="city-selector">
-  <label for="city">Select city:</label>
-  <select id="city" (change)="onCityChange($any($event.target).value)">
-    <option value="">-- Choose a city --</option>
-    @for (city of cities; track city){
-      <option [value]="city">{{ city }}</option>
-    }
-  </select>
+  <label for="city">📍 Select City</label>
+
+  <div class="select-wrapper">
+    <select
+      id="city"
+      aria-label="Select city"
+      (change)="onCityChange($any($event.target).value)"
+    >
+      <option value="">-- Choose a city --</option>
+      @for (city of cities; track city) {
+        <option [value]="city">{{ city }}</option>
+      }
+    </select>
+
+    <span class="chevron">▾</span>
+  </div>
 </div>

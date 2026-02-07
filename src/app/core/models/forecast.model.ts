@@ -1,9 +1,9 @@
 export interface ForecastItem {
-  temperature: number;   // Celsius
-  windSpeed: number;     // m/s
-  description: string;   // clear sky, rain, etc.
-  icon: string;  
-  time: string;        // OpenWeather icon code
+  temperature: number;   
+  windSpeed: number;    
+  description: string;   
+  icon: string;   
+  time: string;      
 }
 
 export interface ForecastDay {

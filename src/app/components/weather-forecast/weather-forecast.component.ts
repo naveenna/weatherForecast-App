@@ -10,6 +10,7 @@ import { Store } from '@ngrx/store';
 import { toSignal } from '@angular/core/rxjs-interop';
 
 import {
+    selectError,
   selectForecast,
   selectLoading,
   selectSelectedCity,
@@ -28,6 +29,10 @@ export class WeatherForecastComponent {
   // Convert store observables to signals
   forecast = toSignal(this.store.select(selectForecast), { initialValue: [] });
   loading = toSignal(this.store.select(selectLoading), { initialValue: false });
+  error = toSignal(this.store.select(selectError), {
+  initialValue: null,
+});
+
   selectedCity = toSignal(this.store.select(selectSelectedCity), {
     initialValue: null,
   });
@@ -42,15 +47,16 @@ export class WeatherForecastComponent {
 
   constructor(private store: Store) {
     // Reset selectedDate whenever the city changes and new forecast arrives
-    effect(
-      () => {
-        const forecast = this.forecast();
-        if (forecast.length) {
-          this.selectedDate.set(forecast[0].date);
-        }
-      },
-      { allowSignalWrites: true },
-    );
+   effect(
+  () => {
+    const forecast = this.forecast();
+    if (forecast.length > 0) {
+      this.selectedDate.set(forecast[0].date);
+    }
+  },
+  { allowSignalWrites: true }
+);
+
   }
 
   // Called when user clicks a tab

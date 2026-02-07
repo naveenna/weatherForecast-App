@@ -10,7 +10,7 @@ export const weatherReducer = createReducer(
     selectedCity: city,
     loading: true,
     error: null,
-    forecast: []   // IMPORTANT: clear previous city data
+    forecast: []   
   })),
 
   on(loadForecastSuccess, (state, { forecast }) => ({

@@ -37,6 +37,7 @@
   background-color: #ccc;
 }
 
+
 .tab.active {
   background-color: #007bff;
   color: #fff;
@@ -118,16 +119,41 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 2rem;
-  color: #a94442;
-  font-weight: bold;
-  border-radius: 8px;
-  margin-top: 1rem;
+  padding: 2rem 1.5rem;
+  margin-top: 2rem;
+  border-radius: 12px;
+  border: 1px dashed #d6dbe5;
+  text-align: center;
+  animation: fadeIn 0.25s ease-in-out;
+
+  .icon {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+  }
+
+  h3 {
+    margin: 0.2rem 0;
+    font-size: 1.1rem;
+    color: #333;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: #666;
+    max-width: 260px;
+  }
 }
 
-.no-forecast p {
-  margin: 0;
-  font-size: 1.1rem;
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ------------------- Responsive ------------------- */
@@ -145,4 +171,10 @@
     font-size: 0.9rem;
     padding: 0.4rem 0.8rem;
   }
+}
+.error {
+  color: #b00020;
+  padding: 16px;
+  border-radius: 8px;
+  text-align: center;
 }

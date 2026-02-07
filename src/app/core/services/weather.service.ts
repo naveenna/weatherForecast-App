@@ -24,7 +24,7 @@ export class WeatherService {
       })
       .pipe(map((response) => this.mapToDailyForecast(response)));
   }
-
+//mapping response values to UI model(required parameters)
   private mapToDailyForecast(response: any): ForecastDay[] {
     const dailyMap = new Map<string, any[]>();
 
