@@ -1,0 +1,148 @@
+/* ------------------- Day Block ------------------- */
+.day-block {
+  background-color: #eef6fb;
+  padding: 1rem;
+  border-radius: 10px;
+  margin-bottom: 2rem;
+}
+
+/* Day heading */
+.day-block h2 {
+  margin-bottom: 1rem;
+  font-size: 1.4rem;
+  color: #333;
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 0.5rem;
+}
+
+/* ------------------- Tabs ------------------- */
+.tabs {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 1rem;
+  flex-wrap: wrap;
+}
+
+.tab {
+  padding: 0.5rem 1rem;
+  border: none;
+  background-color: #ddd;
+  border-radius: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: background-color 0.2s, transform 0.2s;
+}
+
+.tab:hover {
+  background-color: #ccc;
+}
+
+.tab.active {
+  background-color: #007bff;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
+/* ------------------- Forecast Container ------------------- */
+.forecast-container {
+  display: flex;
+  gap: 1rem;
+  overflow-x: auto;
+  padding-bottom: 0.5rem;
+  flex-wrap: wrap;
+  justify-content: flex-start;
+}
+
+/* ------------------- Forecast Card ------------------- */
+.forecast-card {
+  min-width: 140px;
+  padding: 1rem;
+  text-align: center;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.08);
+  flex-shrink: 0;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.forecast-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+}
+
+/* Forecast card content */
+.forecast-card p {
+  margin: 0.3rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* Temperature bold */
+.forecast-card p:nth-child(3) {
+  font-weight: bold;
+}
+
+/* Weather icon */
+.forecast-card img {
+  width: 60px;
+  height: 60px;
+  margin-bottom: 0.5rem;
+}
+
+/* ------------------- Loading ------------------- */
+.loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 2rem 0;
+}
+
+.spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #007bff;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin-bottom: 0.5rem;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* ------------------- No Forecast Block ------------------- */
+.no-forecast {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem;
+  color: #a94442;
+  font-weight: bold;
+  border-radius: 8px;
+  margin-top: 1rem;
+}
+
+.no-forecast p {
+  margin: 0;
+  font-size: 1.1rem;
+}
+
+/* ------------------- Responsive ------------------- */
+@media (max-width: 600px) {
+  .forecast-container {
+    justify-content: center;
+  }
+
+  .forecast-card {
+    width: 120px;
+    padding: 0.8rem;
+  }
+
+  .tab {
+    font-size: 0.9rem;
+    padding: 0.4rem 0.8rem;
+  }
+}

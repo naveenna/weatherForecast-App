@@ -1,0 +1,52 @@
+<!-- Loading -->
+@if (loading()) {
+  <div class="loading">
+    <div class="spinner"></div>
+    <p>Loading weather data...</p>
+  </div>
+}
+
+<!-- Forecast available -->
+@if (forecast().length > 0) {
+  <!-- Date Tabs -->
+  <div class="tabs">
+    @for (day of forecast(); track day.date) {
+      <button
+        class="tab"
+        [class.active]="day.date === activeDate()"
+        (click)="selectDate(day.date)"
+      >
+        {{ day.date }}
+      </button>
+    }
+  </div>
+
+  <!-- Forecast Cards for active date -->
+  <div class="forecast-container">
+    @for (day of forecast(); track day.date) {
+      @if (day.date === activeDate()) {
+        @for (forecast of day.forecasts; track forecast.time) {
+          <div class="forecast-card">
+            <p>⏰ {{ forecast.time }}</p>
+            <img
+              [src]="'https://openweathermap.org/img/wn/' + forecast.icon + '@2x.png'"
+              [alt]="forecast.description"
+            />
+            <p>🌡 {{ forecast.temperature }} °C</p>
+            <p>💨 {{ forecast.windSpeed }} m/s</p>
+            <p>{{ forecast.description }}</p>
+          </div>
+        }
+      }
+    }
+  </div>
+}
+
+<!-- No forecast -->
+@if (!loading() && forecast().length === 0) {
+  <div class="no-forecast">
+    <p>No forecast available</p>
+    <p>Please choose a city to display forecast</p>
+  </div>
+}
+

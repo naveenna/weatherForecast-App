@@ -1,0 +1,9 @@
+<div class="city-selector">
+  <label for="city">Select city:</label>
+  <select id="city" (change)="onCityChange($any($event.target).value)">
+    <option value="">-- Choose a city --</option>
+    @for (city of cities; track city){
+      <option [value]="city">{{ city }}</option>
+    }
+  </select>
+</div>
