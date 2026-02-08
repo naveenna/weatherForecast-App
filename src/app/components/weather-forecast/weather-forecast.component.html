@@ -15,7 +15,6 @@
 
 <!-- Forecast Available -->
 @if (!loading() && !error() && forecast().length > 0) {
-
   <!-- Date Tabs -->
   <div class="tabs">
     @for (day of forecast(); track day.date) {
@@ -38,7 +37,9 @@
             <p>⏰ {{ forecast.time }}</p>
 
             <img
-              [src]="'https://openweathermap.org/img/wn/' + forecast.icon + '@2x.png'"
+              [src]="
+                'https://openweathermap.org/img/wn/' + forecast.icon + '@2x.png'
+              "
               [alt]="forecast.description"
             />
 

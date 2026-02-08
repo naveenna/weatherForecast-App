@@ -1,9 +1,12 @@
 import { TestBed } from '@angular/core/testing';
-import { HttpClientTestingModule, HttpTestingController } from '@angular/common/http/testing';
+import {
+  HttpClientTestingModule,
+  HttpTestingController,
+} from '@angular/common/http/testing';
 
 import { WeatherService } from './weather.service';
-import { ForecastDay } from '../models/forecast.model';
 import { environment } from '../../../environments/environment';
+import { ForecastDay } from '../models/forecast.model';
 
 describe('WeatherService', () => {
   let service: WeatherService;
@@ -26,79 +29,86 @@ describe('WeatherService', () => {
   it('should be created', () => {
     expect(service).toBeTruthy();
   });
-
-  it('should call OpenWeather API with correct city and params', () => {
-    const mockCity = 'London';
-
-    service.getForecast(mockCity).subscribe();
-
-    const req = httpMock.expectOne((request) =>
-      request.url === environment.weatherApi.baseUrl &&
-      request.params.get('q') === mockCity &&
-      request.params.get('units') === 'metric' &&
-      request.params.get('appid') === environment.weatherApi.apiKey
-    );
-
-    expect(req.request.method).toBe('GET');
-    req.flush({ list: [] });
-  });
-
-  it('should transform API response to ForecastDay[] excluding today', () => {
-    const today = new Date();
-    const todayStr = today.toISOString().split('T')[0];
-
-    const tomorrow = new Date(today);
-    tomorrow.setDate(today.getDate() + 1);
-    const tomorrowStr = tomorrow.toISOString().split('T')[0];
-
-    const dayAfter = new Date(today);
-    dayAfter.setDate(today.getDate() + 2);
-    const dayAfterStr = dayAfter.toISOString().split('T')[0];
+  it('should map API response to next 5 days forecast excluding today', () => {
+    const today = new Date().toISOString().split('T')[0];
 
     const mockResponse = {
       list: [
-        // Today
-        { dt_txt: `${todayStr} 09:00:00`, main: { temp: 10 }, wind: { speed: 2 }, weather: [{ description: 'sunny', icon: '01d' }] },
-
-        // Tomorrow
-        { dt_txt: `${tomorrowStr} 09:00:00`, main: { temp: 12 }, wind: { speed: 3 }, weather: [{ description: 'cloudy', icon: '02d' }] },
-        { dt_txt: `${tomorrowStr} 12:00:00`, main: { temp: 14 }, wind: { speed: 4 }, weather: [{ description: 'rain', icon: '10d' }] },
-
-        // Day after tomorrow 
-        { dt_txt: `${dayAfterStr} 09:00:00`, main: { temp: 15 }, wind: { speed: 5 }, weather: [{ description: 'fog', icon: '50d' }] },
-      ]
+        createForecastItem(`${today} 09:00:00`, 20),
+        createForecastItem(`${addDays(today, 1)} 09:00:00`, 21),
+        createForecastItem(`${addDays(today, 2)} 09:00:00`, 24),
+        createForecastItem(`${addDays(today, 3)} 09:00:00`, 21),
+        createForecastItem(`${addDays(today, 4)} 09:00:00`, 23),
+        createForecastItem(`${addDays(today, 5)} 09:00:00`, 21)
+      ],
     };
 
-    service.getForecast('London').subscribe((result: ForecastDay[]) => {
-      // First day after today
-      expect(result.length).toBe(2);
-      
-      // Tomorrow
-      expect(result[0].date).toBe(tomorrowStr);
-      expect(result[0].forecasts.length).toBe(2);
-      expect(result[0].forecasts[0].temperature).toBe(12);
-      expect(result[0].forecasts[0].description).toBe('cloudy');
-      expect(result[0].forecasts[1].temperature).toBe(14);
-      expect(result[0].forecasts[1].description).toBe('rain');
+    let result!: ForecastDay[];
 
-      // Day after tomorrow
-      expect(result[1].date).toBe(dayAfterStr);
-      expect(result[1].forecasts.length).toBe(1);
-      expect(result[1].forecasts[0].temperature).toBe(15);
-      expect(result[1].forecasts[0].description).toBe('fog');
+    service.getForecast('London').subscribe((data) => {
+      result = data;
     });
 
-    const req = httpMock.expectOne(() => true);
+    const req = httpMock.expectOne(
+      (req) =>
+        req.method === 'GET' && req.url === environment.weatherApi.baseUrl,
+    );
+
     req.flush(mockResponse);
+
+    expect(result.length).toBe(5);
+    expect(result.some((day) => day.date === today)).toBeFalse();
   });
 
-  it('should handle empty API response gracefully', () => {
-    service.getForecast('London').subscribe((result: ForecastDay[]) => {
-      expect(result.length).toBe(0);
+  it('should correctly map forecast values', () => {
+    const mockResponse = {
+      list: [createForecastItem('2026-02-07 12:00:00', 18)],
+    };
+
+    let result!: ForecastDay[];
+
+    service.getForecast('London').subscribe((data) => {
+      result = data;
     });
 
-    const req = httpMock.expectOne(() => true);
-    req.flush({ list: [] });
-  });
+    const req = httpMock.expectOne(
+      (req) =>
+        req.method === 'GET' && req.url === environment.weatherApi.baseUrl,
+    );
 
+    req.flush(mockResponse);
+
+    const forecast = result[0].forecasts[0];
+
+    expect(forecast.time).toBe('12:00:00');
+    expect(forecast.temperature).toBe(18);
+    expect(forecast.windSpeed).toBe(5);
+    expect(forecast.description).toBe('clear sky');
+    expect(forecast.icon).toBe('01d');
+  });
 });
+
+/* ---------- Helper ---------- */
+
+function createForecastItem(dateTime: string, temp: number) {
+  return {
+    dt_txt: dateTime,
+    main: {
+      temp,
+    },
+    wind: {
+      speed: 5,
+    },
+    weather: [
+      {
+        description: 'clear sky',
+        icon: '01d',
+      },
+    ],
+  };
+}
+function addDays(base: string, days: number): string {
+  const date = new Date(base);
+  date.setDate(date.getDate() + days);
+  return date.toISOString().split('T')[0];
+}

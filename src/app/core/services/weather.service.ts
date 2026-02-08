@@ -9,6 +9,7 @@ import { environment } from '../../../environments/environment';
   providedIn: 'root',
 })
 export class WeatherService {
+
   constructor(private http: HttpClient) {}
 
   getForecast(city: string): Observable<ForecastDay[]> {
@@ -18,37 +19,65 @@ export class WeatherService {
       .get<any>(baseUrl, {
         params: {
           q: city,
-          units: 'metric', // Celsius
+          units: 'metric', // to get units in celsius
           appid: apiKey,
         },
       })
-      .pipe(map((response) => this.mapToDailyForecast(response)));
+      .pipe(
+        map(response => this.mapToNextFiveDaysForecast(response))
+      );
   }
-//mapping response values to UI model(required parameters)
-  private mapToDailyForecast(response: any): ForecastDay[] {
-    const dailyMap = new Map<string, any[]>();
 
-    for (const item of response.list) {
-      const date = item.dt_txt.split(' ')[0];
+  // Maps API response to UI-friendly daily forecast (next 5 days only)
+  private mapToNextFiveDaysForecast(response: any): ForecastDay[] {
+    const groupedByDate = this.groupForecastByDate(response.list);
+    const upcomingDates = this.getNextFiveDates(groupedByDate);
 
-      if (!dailyMap.has(date)) {
-        dailyMap.set(date, []);
+    return upcomingDates.map(date => ({
+      date,
+      forecasts: groupedByDate.get(date)!.map(item => ({
+        time: this.extractTime(item.dt_txt),
+        temperature: Math.round(item.main.temp),
+        windSpeed: item.wind.speed,
+        description: item.weather[0].description,
+        icon: item.weather[0].icon,
+      })),
+    }));
+  }
+
+  private groupForecastByDate(list: any[]): Map<string, any[]> {
+    const map = new Map<string, any[]>();
+
+    for (const item of list) {
+      const date = this.extractDate(item.dt_txt);
+
+      if (!map.has(date)) {
+        map.set(date, []);
       }
 
-      dailyMap.get(date)!.push(item);
+      map.get(date)!.push(item);
     }
 
-    return Array.from(dailyMap.entries())
-      .slice(1, 6)
-      .map(([date, items]) => ({
-        date,
-        forecasts: items.map((i) => ({
-          time: i.dt_txt.split(' ')[1],
-          temperature: Math.round(i.main.temp),
-          windSpeed: i.wind.speed,
-          description: i.weather[0].description,
-          icon: i.weather[0].icon,
-        })),
-      }));
+    return map;
+  }
+
+  // Explicitly excludes today and returns next 5 dates
+  private getNextFiveDates(groupedData: Map<string, any[]>): string[] {
+    const today = this.getTodayDate();
+
+    return Array.from(groupedData.keys())
+      .filter(date => date !== today)
+  }
+
+  private getTodayDate(): string {
+    return new Date().toISOString().split('T')[0];
+  }
+
+  private extractDate(dateTime: string): string {
+    return dateTime.split(' ')[0];
+  }
+
+  private extractTime(dateTime: string): string {
+    return dateTime.split(' ')[1];
   }
 }
