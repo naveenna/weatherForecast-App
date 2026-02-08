@@ -54,18 +54,34 @@ This is a **5-Day Weather Forecast Angular 17+ application** that allows users t
 
 ## Project Structure
 src/app/
-├─ core/
-│   models/forecast.model.ts
-│   services/weather.service.ts
-├─ store/weather/
-│   weather.actions.ts
-│   weather.reducer.ts
-│   weather.selectors.ts
-│   weather.effects.ts
-    weather.state.ts 
-|
-├─ components/
-│       city-selector/
-│       weather-forecast/
-├─ app.component.ts
-|─ environments/
+├── core/
+│   ├── models/
+│   │   └── forecast.model.ts
+│   └── services/
+│       └── weather.service.ts
+│
+├── store/
+│   └── weather/
+│       ├── weather.actions.ts
+│       ├── weather.reducer.ts
+│       ├── weather.selectors.ts
+│       ├── weather.effects.ts
+│       └── weather.state.ts
+│
+├── components/
+│   ├── city-selector/
+│   │   ├── city-selector.component.ts
+│   │   ├── city-selector.component.html
+│   │   └── city-selector.component.scss
+│   │
+│   └── weather-forecast/
+│       ├── weather-forecast.component.ts
+│       ├── weather-forecast.component.html
+│       └── weather-forecast.component.scss
+│
+├── app.component.ts
+│
+└── environments/
+    ├── environment.ts
+   
+
