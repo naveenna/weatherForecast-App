@@ -5,9 +5,11 @@
     <select
       id="city"
       aria-label="Select city"
-      (change)="onCityChange($any($event.target).value)"
+      (change)="onCityChange(citySelect.value)"
+      #citySelect
     >
       <option value="">-- Choose a city --</option>
+
       @for (city of cities; track city) {
         <option [value]="city">{{ city }}</option>
       }
