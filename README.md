@@ -51,8 +51,9 @@ This is a **5-Day Weather Forecast Angular 17+ application** that allows users t
 - Unit tests for service and components
 
 ---
+## 📁 Project Structure
 
-## Project Structure
+```text
 src/app/
 ├── core/
 │   ├── models/
@@ -83,5 +84,4 @@ src/app/
 │
 └── environments/
     ├── environment.ts
-   
-
+    
